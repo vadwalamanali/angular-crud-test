@@ -1,0 +1,81 @@
+<h1>Angular CRUD Example</h1>
+<h3 *ngIf="countryIdToUpdate; else create">
+  Update Country for Id: {{countryIdToUpdate}}
+</h3>
+<ng-template #create>
+  <h3> Create New Country State City </h3>
+</ng-template>
+<div>
+  <form [formGroup]="countryForm" (ngSubmit)="onCountryFormSubmit()">
+    <table>
+      <tr>
+        <td>Enter Country</td>
+        <td>
+          <input formControlName="country">
+          <label *ngIf="countryForm.get('country').invalid && processValidation" class="error"> Country is required. </label>
+        </td>
+      </tr>
+      <tr>
+        <td>Enter State</td>
+        <td>
+          <input formControlName="state">
+          <label *ngIf="countryForm.get('state').invalid && processValidation" class="error"> State is required. </label>
+        </td>
+      </tr>
+      <tr>
+        <td>Enter City</td>
+        <td>
+          <input formControlName="city">
+          <label *ngIf="countryForm.get('city').invalid && processValidation" class="error"> City is required. </label>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2">
+          <button *ngIf="!countryIdToUpdate">CREATE</button>
+          <button *ngIf="countryIdToUpdate">UPDATE</button>
+          <button (click)="backToCreateCountry()" *ngIf="countryIdToUpdate">Go Back</button>
+        </td>
+      </tr>
+    </table>
+  </form>
+  <br/>
+  <div *ngIf="statusCode; else processing">
+    <div *ngIf="statusCode === 201" class="success">
+      Data added successfully.
+    </div>
+    <div *ngIf="statusCode === 200" class="success">
+      Data updated successfully.
+    </div>
+    <div *ngIf="statusCode === 204" class="success">
+      Data deleted successfully.
+    </div>
+    <div *ngIf="statusCode === 500" class="error">
+      Internal Server Error.
+    </div>
+  </div>
+  <ng-template #processing>
+    <img *ngIf="requestProcessing" src="assets/images/loading.gif">
+  </ng-template>
+</div>
+<h3>Country Details</h3>
+<table>
+  <tr>
+    <th> Id</th>
+    <th>Country</th>
+    <th>State</th>
+    <th>City</th>
+    <th>Action</th>
+  </tr>
+  <tr *ngFor="let country of allCountry">
+    <td>{{country.id}}</td>
+    <td>{{country.country}}</td>
+    <td>{{country.state}}</td>
+    <td>{{country.city}}</td>
+    <td>
+      <button type="button" (click)="loadCountryToEdit(country.id)">Edit</button>
+    </td>
+    <td>
+      <button type="button" (click)="deleteCountry(country.id)">Delete</button>
+    </td>
+  </tr>
+</table>
